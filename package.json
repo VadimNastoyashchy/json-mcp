@@ -1,0 +1,29 @@
+{
+  "name": "json-mcp",
+  "productName": "JSON MCP Server",
+  "version": "0.0.0",
+  "description": "Fast, easy and reliable JSON MCP Server.",
+  "main": "./src/main.js",
+  "scripts": {
+    "prettier": "prettier . --check",
+    "fix-formatting": "npx prettier --write ."
+  },
+  "keywords": [
+    "JSON",
+    "JSON MCP",
+    "Application"
+  ],
+  "author": "Vadym Nastoiashchyi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VadimNastoyashchy/json-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VadimNastoyashchy/json-mcp/issues"
+  },
+  "homepage": "https://github.com/VadimNastoyashchy/json-mcp#readme",
+  "devDependencies": {
+    "prettier": "3.0.3"
+  }
+}
