@@ -1,7 +1,7 @@
 {
   "name": "json-mcp",
   "productName": "JSON MCP Server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Fast, easy and reliable JSON MCP Server.",
   "main": "./src/main.js",
   "scripts": {
