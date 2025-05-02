@@ -5,7 +5,9 @@
   "description": "Fast, easy and reliable JSON MCP Server.",
   "type": "module",
   "main": "build/index.js",
-  "bin": "./build/index.js",
+  "bin": {
+    "json-mcp-server": "./build/index.js"
+  },
   "files": [
     "build"
   ],
@@ -37,12 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
-    "prettier": "3.0.3",
-    "typescript": "^5.3.3"
-  },
-  "volta": {
-    "node": "20.9.0",
-    "npm": "10.5.1",
-    "yarn": "4.4.0"
+    "typescript": "^5.3.3",
+    "prettier": "3.0.3"
   }
 }
