@@ -1,10 +1,21 @@
 {
-  "name": "json-mcp",
+  "name": "json-mcp-server",
   "productName": "JSON MCP Server",
   "version": "0.0.1",
   "description": "Fast, easy and reliable JSON MCP Server.",
-  "main": "./src/main.js",
+  "type": "module",
+  "main": "build/index.js",
+  "bin": {
+    "json-mcp-server": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
   "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
     "prettier": "prettier . --check",
     "fix-formatting": "npx prettier --write ."
   },
@@ -23,7 +34,12 @@
     "url": "https://github.com/VadimNastoyashchy/json-mcp/issues"
   },
   "homepage": "https://github.com/VadimNastoyashchy/json-mcp#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "0.6.0"
+  },
   "devDependencies": {
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3",
     "prettier": "3.0.3"
   }
 }
