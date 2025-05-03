@@ -13,9 +13,10 @@ A Model Context Protocol (MCP) server enables LLMs to interact with JSON file/s 
 - Merge smallest parts into one JSON file
 - Find specific data within conditions
 
-### Example VS Code User settings config
+### Example config
 
 ```js
+// User Settings (JSON)
   "mcp": {
     "servers": {
       "json-mcp-server": {
@@ -39,11 +40,20 @@ After installation, the JSON MCP server will be available for use with your GitH
 
 ### Installation Server
 
-# Install globally
+#### Install globally
+
+```bash
 npm install -g json-mcp-server@latest
+```
 
-# Run after global installation
+#### Run after global installation
+
+```bash
 json-mcp-server
+```
 
-# Using npx with latest version (recommended)
+#### Using npx with latest version (recommended)
+
+```bash
 npx json-mcp-server@latest
+```
