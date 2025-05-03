@@ -13,6 +13,9 @@ A Model Context Protocol (MCP) server enables LLMs to interact with JSON file/s 
 - Merge smallest parts into one JSON file
 - Find specific data within conditions
 
+### Demo
+![til](./assets/demo.gif)
+
 ### Example config
 
 ```js
