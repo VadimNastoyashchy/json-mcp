@@ -7,10 +7,12 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 
+const SERVER_VERSION = '1.0.1'
+
 const server = new Server(
   {
     name: 'json-mcp-server',
-    version: '0.0.1',
+    version: SERVER_VERSION,
   },
   {
     capabilities: {
@@ -105,7 +107,7 @@ export async function main() {
   try {
     const transport = new StdioServerTransport()
     await server.connect(transport)
-    console.error('JSON MCP Server running on stdio')
+    console.error(`JSON MCP Server ${SERVER_VERSION} running on stdio`)
   } catch (error) {
     console.error('Error during startup:', error)
     process.exit(1)
