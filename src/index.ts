@@ -6,6 +6,7 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
+import { z } from 'zod'
 
 const SERVER_VERSION = '1.0.1'
 
@@ -20,6 +21,11 @@ const server = new Server(
     },
   }
 )
+
+const SplitArgumentsSchema = z.object({
+  fileContent: z.string(),
+  numObjects: z.number().int().positive(),
+})
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
@@ -47,60 +53,63 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 })
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  if (request.params.name === 'split') {
-    const { fileContent, numObjects } = request.params.arguments as {
-      fileContent: string
-      numObjects: number
+  const { name, arguments: args } = request.params
+
+  try {
+    if (name === 'split') {
+      const { fileContent, numObjects } = SplitArgumentsSchema.parse(args)
+
+      try {
+        const jsonData = JSON.parse(fileContent)
+        const keys = Object.keys(jsonData)
+
+        if (numObjects > keys.length) {
+          throw new Error(
+            `Invalid 'numObjects' value. It should be between 1 and the number of top-level keys (${keys.length}).`
+          )
+        }
+
+        const chunkSize = Math.ceil(keys.length / numObjects)
+        const chunks: Record<string, any>[] = []
+
+        for (let i = 0; i < keys.length; i += chunkSize) {
+          const chunk = keys.slice(i, i + chunkSize).reduce(
+            (acc, key) => {
+              acc[key] = jsonData[key]
+              return acc
+            },
+            {} as Record<string, any>
+          )
+          chunks.push(chunk)
+        }
+
+        const splitFiles = chunks.map((chunk, index) => ({
+          fileName: `split_part_${index + 1}.json`,
+          content: JSON.stringify(chunk, null, 2),
+        }))
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `JSON split successfully into ${numObjects} file(s).`,
+            },
+            ...splitFiles.map((file) => ({
+              type: 'file',
+              name: file.fileName,
+              content: file.content,
+            })),
+          ],
+        }
+      } catch (error: any) {
+        throw new Error(`Failed to split JSON file: ${error.message}`)
+      }
+    } else {
+      throw new Error(`Unknown tool: ${name}`)
     }
-
-    try {
-      const jsonData = JSON.parse(fileContent)
-      const keys = Object.keys(jsonData)
-
-      if (numObjects <= 0 || numObjects > keys.length) {
-        throw new Error(
-          `Invalid 'numObjects' value. It should be between 1 and the number of top-level keys (${keys.length}).`
-        )
-      }
-
-      const chunkSize = Math.ceil(keys.length / numObjects)
-      const chunks: Record<string, any>[] = []
-
-      for (let i = 0; i < keys.length; i += chunkSize) {
-        const chunk = keys.slice(i, i + chunkSize).reduce(
-          (acc, key) => {
-            acc[key] = jsonData[key]
-            return acc
-          },
-          {} as Record<string, any>
-        )
-        chunks.push(chunk)
-      }
-
-      const splitFiles = chunks.map((chunk, index) => ({
-        fileName: `split_part_${index + 1}.json`,
-        content: JSON.stringify(chunk, null, 2),
-      }))
-
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `JSON split successfully into ${numObjects} file(s).`,
-          },
-          ...splitFiles.map((file) => ({
-            type: 'file',
-            name: file.fileName,
-            content: file.content,
-          })),
-        ],
-      }
-    } catch (error: any) {
-      throw new Error(`Failed to split JSON file: ${error.message}`)
-    }
+  } catch (error) {
+    throw error
   }
-
-  throw new Error(`Unknown tool: ${request.params.name}`)
 })
 
 export async function main() {
