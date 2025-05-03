@@ -99,5 +99,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   throw new Error(`Unknown tool: ${request.params.name}`)
 })
 
-const transport = new StdioServerTransport()
-await server.connect(transport)
+export async function main() {
+  try {
+    const transport = new StdioServerTransport()
+    await server.connect(transport)
+    console.error('JSON MCP Server running on stdio')
+  } catch (error) {
+    console.error('Error during startup:', error)
+    process.exit(1)
+  }
+}
+
+main().catch((error) => {
+  console.error('Fatal error in main():', error)
+  process.exit(1)
+})
