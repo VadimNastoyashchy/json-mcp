@@ -67,7 +67,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       if (numObjects >= jsonData.length / 2) {
         throw new Error(
-          `The number of objects (${numObjects}) per file cannot be half or more of the total (${jsonData}) JSON data length.`
+          `The number of objects (${numObjects}) per file cannot be half or more of the total (${jsonData.length}) JSON data length.`
         )
       }
 
