@@ -10,7 +10,6 @@ A Model Context Protocol (MCP) server enables LLMs to interact with JSON file/s 
 ### Use Cases
 
 - Split one large JSON file into smallest parts
-- Merge smallest parts into one JSON file
 
 ### Demo
 ![til](./assets/demo.gif)
