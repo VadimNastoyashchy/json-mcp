@@ -7,8 +7,12 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 import { z } from 'zod'
+import { readFileSync } from 'fs'
 
-const SERVER_VERSION = '1.0.1'
+const packageJson = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf-8')
+)
+const SERVER_VERSION = packageJson.version
 
 const server = new Server(
   {
