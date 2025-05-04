@@ -55,60 +55,59 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params
 
-  try {
-    if (name === 'split') {
-      const { fileContent, numObjects } = SplitArgumentsSchema.parse(args)
+  if (name === 'split') {
+    const { fileContent, numObjects } = SplitArgumentsSchema.parse(args)
 
-      try {
-        const jsonData = JSON.parse(fileContent)
-        const keys = Object.keys(jsonData)
+    try {
+      const jsonData = JSON.parse(fileContent)
 
-        if (numObjects > keys.length) {
-          throw new Error(
-            `Invalid 'numObjects' value. It should be between 1 and the number of top-level keys (${keys.length}).`
-          )
-        }
-
-        const chunkSize = Math.ceil(keys.length / numObjects)
-        const chunks: Record<string, any>[] = []
-
-        for (let i = 0; i < keys.length; i += chunkSize) {
-          const chunk = keys.slice(i, i + chunkSize).reduce(
-            (acc, key) => {
-              acc[key] = jsonData[key]
-              return acc
-            },
-            {} as Record<string, any>
-          )
-          chunks.push(chunk)
-        }
-
-        const splitFiles = chunks.map((chunk, index) => ({
-          fileName: `split_part_${index + 1}.json`,
-          content: JSON.stringify(chunk, null, 2),
-        }))
-
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `JSON split successfully into ${numObjects} file(s).`,
-            },
-            ...splitFiles.map((file) => ({
-              type: 'file',
-              name: file.fileName,
-              content: file.content,
-            })),
-          ],
-        }
-      } catch (error: any) {
-        throw new Error(`Failed to split JSON file: ${error.message}`)
+      if (numObjects >= jsonData.length / 2) {
+        throw new Error(
+          `The number of objects (${numObjects}) per file cannot be half or more of the total (${jsonData}) JSON data length.`
+        )
       }
-    } else {
-      throw new Error(`Unknown tool: ${name}`)
+
+      const totalParts = Math.ceil(jsonData.length / numObjects)
+
+      const chunks = []
+
+      for (let i = 0; i < totalParts; i++) {
+        const partArray = jsonData.slice(i * numObjects, (i + 1) * numObjects)
+
+        chunks.push(partArray)
+      }
+
+      const splitFiles = chunks.map((chunk, index) => ({
+        fileName: `part${index + 1}.json`,
+        content: JSON.stringify(chunk, null, 2),
+      }))
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `JSON split successfully into ${splitFiles.length} file(s).`,
+          },
+          ...splitFiles.map((file) => ({
+            type: 'file',
+            name: file.fileName,
+            content: file.content,
+          })),
+        ],
+      }
+    } catch (error: any) {
+      return {
+        isError: true,
+        content: [
+          {
+            type: 'text',
+            text: `Error: ${error.message}`,
+          },
+        ],
+      }
     }
-  } catch (error) {
-    throw error
+  } else {
+    throw new Error(`Unknown tool: ${name}`)
   }
 })
 
