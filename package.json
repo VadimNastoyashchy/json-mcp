@@ -35,12 +35,12 @@
   },
   "homepage": "https://github.com/VadimNastoyashchy/json-mcp#readme",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "0.6.0"
+    "@modelcontextprotocol/sdk": "0.6.0",
+    "zod-to-json-schema": "^3.23.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
     "typescript": "^5.3.3",
-    "prettier": "3.0.3",
-    "zod-to-json-schema": "^3.23.5"
+    "prettier": "3.0.3"
   }
 }
