@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "age": 28,
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "age": 34,
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "name": "Alice Johnson",
+    "email": "alice.johnson@example.com",
+    "age": 23,
+    "isActive": true
+  },
+  {
+    "id": 4,
+    "name": "Bob Brown",
+    "email": "bob.brown@example.com",
+    "age": 45,
+    "isActive": false
+  },
+  {
+    "id": 5,
+    "name": "Charlie Davis",
+    "email": "charlie.davis@example.com",
+    "age": 30,
+    "isActive": true
+  },
+  {
+    "id": 6,
+    "name": "Diana Evans",
+    "email": "diana.evans@example.com",
+    "age": 27,
+    "isActive": false
+  },
+  {
+    "id": 7,
+    "name": "Ethan Foster",
+    "email": "ethan.foster@example.com",
+    "age": 31,
+    "isActive": true
+  },
+  {
+    "id": 8,
+    "name": "Fiona Green",
+    "email": "fiona.green@example.com",
+    "age": 29,
+    "isActive": false
+  },
+  {
+    "id": 9,
+    "name": "George Harris",
+    "email": "george.harris@example.com",
+    "age": 40,
+    "isActive": true
+  },
+  {
+    "id": 10,
+    "name": "Hannah Irving",
+    "email": "hannah.irving@example.com",
+    "age": 26,
+    "isActive": false
+  },
+  {
+    "id": 11,
+    "name": "Ian Jackson",
+    "email": "ian.jackson@example.com",
+    "age": 33,
+    "isActive": true
+  },
+  {
+    "id": 12,
+    "name": "Julia King",
+    "email": "julia.king@example.com",
+    "age": 37,
+    "isActive": false
+  },
+  {
+    "id": 13,
+    "name": "Kevin Lewis",
+    "email": "kevin.lewis@example.com",
+    "age": 42,
+    "isActive": true
+  },
+  {
+    "id": 14,
+    "name": "Laura Martinez",
+    "email": "laura.martinez@example.com",
+    "age": 25,
+    "isActive": false
+  },
+  {
+    "id": 15,
+    "name": "Michael Nelson",
+    "email": "michael.nelson@example.com",
+    "age": 38,
+    "isActive": true
+  },
+  {
+    "id": 16,
+    "name": "Nina Owens",
+    "email": "nina.owens@example.com",
+    "age": 32,
+    "isActive": false
+  },
+  {
+    "id": 17,
+    "name": "Oscar Perez",
+    "email": "oscar.perez@example.com",
+    "age": 29,
+    "isActive": true
+  },
+  {
+    "id": 18,
+    "name": "Paula Quinn",
+    "email": "paula.quinn@example.com",
+    "age": 36,
+    "isActive": false
+  },
+  {
+    "id": 19,
+    "name": "Quincy Roberts",
+    "email": "quincy.roberts@example.com",
+    "age": 41,
+    "isActive": true
+  },
+  {
+    "id": 20,
+    "name": "Rachel Scott",
+    "email": "rachel.scott@example.com",
+    "age": 24,
+    "isActive": false
+  }
+]

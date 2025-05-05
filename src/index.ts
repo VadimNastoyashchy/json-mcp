@@ -10,7 +10,7 @@ import {
 import { z } from 'zod'
 import { readFileSync } from 'fs'
 import { zodToJsonSchema } from 'zod-to-json-schema'
-import fs from 'fs/promises'
+import fs from 'fs'
 import _path from 'path'
 import os from 'os'
 
@@ -36,27 +36,31 @@ const server = new Server(
 )
 
 // Schema definitions
+const PathArgSchema = z.object({
+  path: z.string(),
+})
+
 const SplitFileArgSchema = z.object({
   path: z.string(),
   numObjects: z.number().int().positive(),
 })
 
 // Function implementation
-function expandHome(filepath: string): string {
+const expandHome = (filepath: string) => {
   if (filepath.startsWith('~/') || filepath === '~') {
     return _path.join(os.homedir(), filepath.slice(1))
   }
   return filepath
 }
 
-async function validatePath(requestedPath: string): Promise<string> {
+const validatePath = async (requestedPath: string): Promise<string> => {
   const expandedPath = expandHome(requestedPath)
   const absolute = _path.isAbsolute(expandedPath)
     ? _path.resolve(expandedPath)
     : _path.resolve(process.cwd(), expandedPath)
 
   try {
-    const realPath = await fs.realpath(absolute)
+    const realPath = await fs.promises.realpath(absolute)
     return realPath
   } catch (error) {
     const parentDir = _path.dirname(absolute)
@@ -68,7 +72,7 @@ async function validatePath(requestedPath: string): Promise<string> {
   }
 }
 
-async function getFolder(requestedPath: string): Promise<string> {
+const getParentDir = async (requestedPath: string): Promise<string> => {
   const expandedPath = expandHome(requestedPath)
   const absolute = _path.isAbsolute(expandedPath)
     ? _path.resolve(expandedPath)
@@ -82,6 +86,55 @@ async function getFolder(requestedPath: string): Promise<string> {
   }
 }
 
+const getAllFileNames = async (
+  dir: string,
+  extension: string
+): Promise<string[]> => {
+  try {
+    const filenames = await fs.promises.readdir(dir)
+    return filenames.filter((fn: string) => fn.endsWith(extension))
+  } catch (error) {
+    throw new Error(`No such folder ${dir}`)
+  }
+}
+
+const getAllJsonNames = async (dir: string): Promise<string[]> =>
+  getAllFileNames(dir, '.json')
+
+const getMultipleJsonFilePath = async (fileDir: string): Promise<string[]> => {
+  const filePaths: string[] = []
+  const fileNames = await getAllJsonNames(fileDir)
+  for (let index = 0; index < fileNames.length; index++) {
+    filePaths.push(`${fileDir}/${fileNames[index]}`)
+  }
+  return filePaths
+}
+
+const readFileToJson = async (fileName: string): Promise<any[]> => {
+  try {
+    const content = await fs.promises.readFile(fileName, 'utf-8')
+    return JSON.parse(content)
+  } catch (error) {
+    throw new Error(`Error reading or parsing file ${fileName}: ${error}`)
+  }
+}
+
+const parseMultipleJson = async (fileDir: string) => {
+  const multipleJson: any = []
+  const fileNames = await getMultipleJsonFilePath(fileDir)
+  for (let index = 0; index < fileNames.length; index++) {
+    multipleJson.push(readFileToJson(fileNames[index]))
+  }
+  return multipleJson
+}
+
+const loadFlatJsons = async (path: string) => {
+  const promises = await parseMultipleJson(path)
+  if (promises.length === 0) throw new Error(`No files in ${path}`)
+  const jsons = await Promise.all(promises)
+  return jsons.flat()
+}
+
 // Tool handlers
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
@@ -90,6 +143,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         name: 'split',
         description: 'Split a JSON file into a specified number of objects',
         inputSchema: zodToJsonSchema(SplitFileArgSchema) as ToolInput,
+      },
+      {
+        name: 'merge',
+        description: 'Merge JSON files into a one JSON file',
+        inputSchema: zodToJsonSchema(PathArgSchema) as ToolInput,
       },
     ],
   }
@@ -103,13 +161,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'split': {
         const parsed = SplitFileArgSchema.safeParse(args)
         if (!parsed.success) {
-          throw new Error(`Invalid arguments for split_json: ${parsed.error}`)
+          throw new Error(`Invalid arguments for split: ${parsed.error}`)
         }
         const { path, numObjects } = parsed.data
 
         const validPath = await validatePath(path)
-        const content = await fs.readFile(validPath, 'utf-8')
-        const folder = await getFolder(path)
+        const content = await fs.promises.readFile(validPath, 'utf-8')
+        const folder = await getParentDir(path)
 
         const jsonData = JSON.parse(content)
 
@@ -128,7 +186,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               ?.flat()
             const partFileName = _path.join(folder, `part${i + 1}.json`)
             try {
-              await fs.writeFile(
+              await fs.promises.writeFile(
                 partFileName,
                 JSON.stringify(partArray, null, 2)
               )
@@ -144,6 +202,37 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               type: 'text',
               text: `Successfully splitted to ${parsed.data.path}`,
+            },
+          ],
+        }
+      }
+
+      case 'merge': {
+        const parsed = PathArgSchema.safeParse(args)
+        if (!parsed.success) {
+          throw new Error(`Invalid arguments for merge: ${parsed.error}`)
+        }
+        const { path } = parsed.data
+
+        const validPath = await validatePath(path)
+        const content = await loadFlatJsons(validPath)
+        const fileName = _path.join(validPath, 'merged.json')
+
+        try {
+          await fs.promises.writeFile(
+            fileName,
+            JSON.stringify(content, null, 2)
+          )
+          console.log(`Successfully wrote ${fileName}`)
+        } catch (err) {
+          console.error(`Error writing file ${fileName}:`, err)
+        }
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Successfully merged to ${fileName}`,
             },
           ],
         }

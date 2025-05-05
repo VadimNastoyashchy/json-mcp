@@ -7,11 +7,28 @@ A Model Context Protocol (MCP) server enables LLMs to interact with JSON file/s 
 - **Fast and lightweight**
 - **LLM-friendly**
 
-### Use Cases
+### Use Cases (available tools)
 
-- Split one large JSON file into smallest parts
+`split` **Split a JSON file into a specified number of objects**
+
+_prompt example:_
+
+```
+Split json file from /Users/json-mcp/tests/merged.json
+5 objects per file
+```
+<br>
+
+`merge` **Merge JSON files into a one JSON file**
+
+_prompt example:_
+
+```
+Merge json files from /Users/json-mcp/tests
+```
 
 ### Demo
+
 ![til](./assets/split-demo.gif)
 
 ### Example config
