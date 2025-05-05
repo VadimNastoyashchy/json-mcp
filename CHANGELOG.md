@@ -7,12 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.5 - 2025-05-05
 ### Added
-
-- Added `merge` tool to merge JSON files into a one JSON file 
+- Added `merge` tool to merge JSON files into a one JSON file
 
 ### Fixed
-
 - Fix minor issues
 
 ## 1.0.4 - 2025-05-05
