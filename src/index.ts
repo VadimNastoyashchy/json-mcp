@@ -5,15 +5,24 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ToolSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 import { z } from 'zod'
 import { readFileSync } from 'fs'
+import { zodToJsonSchema } from 'zod-to-json-schema'
+import fs from 'fs/promises'
+import _path from 'path'
+import os from 'os'
+
+const ToolInputSchema = ToolSchema.shape.inputSchema
+type ToolInput = z.infer<typeof ToolInputSchema>
 
 const packageJson = JSON.parse(
   readFileSync(new URL('../package.json', import.meta.url), 'utf-8')
 )
 const SERVER_VERSION = packageJson.version
 
+// Server setup
 const server = new Server(
   {
     name: 'json-mcp-server',
@@ -26,95 +35,133 @@ const server = new Server(
   }
 )
 
-const SplitArgumentsSchema = z.object({
-  fileContent: z.string(),
+// Schema definitions
+const SplitFileArgSchema = z.object({
+  path: z.string(),
   numObjects: z.number().int().positive(),
 })
 
+// Function implementation
+function expandHome(filepath: string): string {
+  if (filepath.startsWith('~/') || filepath === '~') {
+    return _path.join(os.homedir(), filepath.slice(1))
+  }
+  return filepath
+}
+
+async function validatePath(requestedPath: string): Promise<string> {
+  const expandedPath = expandHome(requestedPath)
+  const absolute = _path.isAbsolute(expandedPath)
+    ? _path.resolve(expandedPath)
+    : _path.resolve(process.cwd(), expandedPath)
+
+  try {
+    const realPath = await fs.realpath(absolute)
+    return realPath
+  } catch (error) {
+    const parentDir = _path.dirname(absolute)
+    try {
+      return absolute
+    } catch {
+      throw new Error(`Parent directory does not exist: ${parentDir}`)
+    }
+  }
+}
+
+async function getFolder(requestedPath: string): Promise<string> {
+  const expandedPath = expandHome(requestedPath)
+  const absolute = _path.isAbsolute(expandedPath)
+    ? _path.resolve(expandedPath)
+    : _path.resolve(process.cwd(), expandedPath)
+
+  try {
+    const parentDir = _path.dirname(absolute)
+    return parentDir
+  } catch (error) {
+    throw new Error('Parent directory does not exist')
+  }
+}
+
+// Tool handlers
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
       {
         name: 'split',
         description: 'Split a JSON file into a specified number of objects',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            fileContent: {
-              type: 'string',
-              description: 'The content of the JSON file in string format',
-            },
-            numObjects: {
-              type: 'number',
-              description: 'The number of objects to split the JSON into',
-            },
-          },
-          required: ['fileContent', 'numObjects'],
-        },
+        inputSchema: zodToJsonSchema(SplitFileArgSchema) as ToolInput,
       },
     ],
   }
 })
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params
+  try {
+    const { name, arguments: args } = request.params
 
-  if (name === 'split') {
-    const { fileContent, numObjects } = SplitArgumentsSchema.parse(args)
+    switch (name) {
+      case 'split': {
+        const parsed = SplitFileArgSchema.safeParse(args)
+        if (!parsed.success) {
+          throw new Error(`Invalid arguments for split_json: ${parsed.error}`)
+        }
+        const { path, numObjects } = parsed.data
 
-    try {
-      const jsonData = JSON.parse(fileContent)
+        const validPath = await validatePath(path)
+        const content = await fs.readFile(validPath, 'utf-8')
+        const folder = await getFolder(path)
 
-      if (numObjects >= jsonData.length / 2) {
-        throw new Error(
-          `The number of objects (${numObjects}) per file cannot be half or more of the total (${jsonData.length}) JSON data length.`
+        const jsonData = JSON.parse(content)
+
+        if (numObjects >= jsonData.length / 2) {
+          throw new Error(
+            `The number of objects (${numObjects}) per file cannot be half or more of the total (${jsonData.length}) JSON data length.`
+          )
+        }
+
+        const totalParts = Math.ceil(jsonData.length / numObjects)
+
+        await Promise.all(
+          Array.from({ length: totalParts }, async (_, i) => {
+            const partArray = jsonData
+              .slice(i * numObjects, (i + 1) * numObjects)
+              ?.flat()
+            const partFileName = _path.join(folder, `part${i + 1}.json`)
+            try {
+              await fs.writeFile(
+                partFileName,
+                JSON.stringify(partArray, null, 2)
+              )
+              console.log(`Successfully wrote ${partFileName}`)
+            } catch (err) {
+              console.error(`Error writing file ${partFileName}:`, err)
+            }
+          })
         )
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Successfully splitted to ${parsed.data.path}`,
+            },
+          ],
+        }
       }
 
-      const totalParts = Math.ceil(jsonData.length / numObjects)
-
-      const chunks = []
-
-      for (let i = 0; i < totalParts; i++) {
-        const partArray = jsonData.slice(i * numObjects, (i + 1) * numObjects)
-
-        chunks.push(partArray)
-      }
-
-      const splitFiles = chunks.map((chunk, index) => ({
-        fileName: `part${index + 1}.json`,
-        content: JSON.stringify(chunk, null, 2),
-      }))
-
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `JSON split successfully into ${splitFiles.length} file(s).`,
-          },
-          ...splitFiles.map((file) => ({
-            type: 'file',
-            name: file.fileName,
-            content: file.content,
-          })),
-        ],
-      }
-    } catch (error: any) {
-      return {
-        isError: true,
-        content: [
-          {
-            type: 'text',
-            text: `Error: ${error.message}`,
-          },
-        ],
-      }
+      default:
+        throw new Error(`Unknown tool: ${name}`)
     }
-  } else {
-    throw new Error(`Unknown tool: ${name}`)
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    return {
+      content: [{ type: 'text', text: `Error: ${errorMessage}` }],
+      isError: true,
+    }
   }
 })
 
+// Start server
 export async function main() {
   try {
     const transport = new StdioServerTransport()
