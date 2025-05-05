@@ -40,7 +40,7 @@ const PathArgSchema = z.object({
   path: z.string(),
 })
 
-const SplitFileArgSchema = z.object({
+const SplitArgSchema = z.object({
   path: z.string(),
   numObjects: z.number().int().positive(),
 })
@@ -142,7 +142,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: 'split',
         description: 'Split a JSON file into a specified number of objects',
-        inputSchema: zodToJsonSchema(SplitFileArgSchema) as ToolInput,
+        inputSchema: zodToJsonSchema(SplitArgSchema) as ToolInput,
       },
       {
         name: 'merge',
@@ -159,7 +159,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     switch (name) {
       case 'split': {
-        const parsed = SplitFileArgSchema.safeParse(args)
+        const parsed = SplitArgSchema.safeParse(args)
         if (!parsed.success) {
           throw new Error(`Invalid arguments for split: ${parsed.error}`)
         }

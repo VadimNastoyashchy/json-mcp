@@ -7,9 +7,18 @@ A Model Context Protocol (MCP) server enables LLMs to interact with JSON file/s 
 - **Fast and lightweight**
 - **LLM-friendly**
 
+
+### Demo
+
+![til](./assets/split-demo.gif)
+
 ### Use Cases (available tools)
 
-`split` **Split a JSON file into a specified number of objects**
+#### `split`
+
+Split a JSON file into a specified number of objects
+
+> _! path to the file should be provided_
 
 _prompt example:_
 
@@ -17,9 +26,12 @@ _prompt example:_
 Split json file from /Users/json-mcp/tests/merged.json
 5 objects per file
 ```
-<br>
 
-`merge` **Merge JSON files into a one JSON file**
+#### `merge`
+
+Merge JSON files into a one JSON file
+
+> _! path to the folder should be provided_
 
 _prompt example:_
 
@@ -27,11 +39,10 @@ _prompt example:_
 Merge json files from /Users/json-mcp/tests
 ```
 
-### Demo
 
-![til](./assets/split-demo.gif)
+### Configuration
 
-### Example config
+`VS Code manual configuration`
 
 ```js
 // User Settings (JSON)
@@ -44,8 +55,7 @@ Merge json files from /Users/json-mcp/tests
     }
   },
 ```
-
-### Installation in VS Code
+`Installation in VS Code`
 
 You can install the Playwright MCP server using the VS Code CLI:
 
