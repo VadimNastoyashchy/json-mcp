@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Fix minor issues
+
 ## 1.0.3 - 2025-05-05
 ### Changed
 - Split logic to use JSON file path to avoid memory issue within > 50 mb file
