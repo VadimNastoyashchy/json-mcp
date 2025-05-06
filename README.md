@@ -71,11 +71,11 @@ code --add-mcp '{"name":"json-mcp-server","command":"npx","args": ["json-mcp-ser
 
 After installation, the JSON MCP server will be available for use with your GitHub Copilot agent in VS Code.
 
-### Installation Server
-
-#### Installing via Smithery
+`Claude Desktop`
 
 To install json-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@VadimNastoyashchy/json-mcp):
+
+### Installation Server
 
 ```bash
 npx -y @smithery/cli install @VadimNastoyashchy/json-mcp --client claude
