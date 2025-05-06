@@ -1,5 +1,8 @@
 ## JSON MCP
 [![smithery badge](https://smithery.ai/badge/@VadimNastoyashchy/json-mcp)](https://smithery.ai/server/@VadimNastoyashchy/json-mcp)
+
+A Model Context Protocol (MCP) server enables LLMs to interact with JSON file/s (split, merge, find specific data within conditions)
+
 <a href="https://glama.ai/mcp/servers/@VadimNastoyashchy/json-mcp">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@VadimNastoyashchy/json-mcp/badge" />
 </a>
