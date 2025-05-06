@@ -1,7 +1,5 @@
 ## JSON MCP
-
-A Model Context Protocol (MCP) server enables LLMs to interact with JSON file/s (split, merge, find specific data within conditions)
-
+[![smithery badge](https://smithery.ai/badge/@VadimNastoyashchy/json-mcp)](https://smithery.ai/server/@VadimNastoyashchy/json-mcp)
 <a href="https://glama.ai/mcp/servers/@VadimNastoyashchy/json-mcp">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@VadimNastoyashchy/json-mcp/badge" />
 </a>
@@ -71,6 +69,14 @@ code --add-mcp '{"name":"json-mcp-server","command":"npx","args": ["json-mcp-ser
 After installation, the JSON MCP server will be available for use with your GitHub Copilot agent in VS Code.
 
 ### Installation Server
+
+#### Installing via Smithery
+
+To install json-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@VadimNastoyashchy/json-mcp):
+
+```bash
+npx -y @smithery/cli install @VadimNastoyashchy/json-mcp --client claude
+```
 
 #### Install globally
 
