@@ -2,7 +2,7 @@
 
 [![Smithery Badge](https://smithery.ai/badge/@VadimNastoyashchy/json-mcp)](https://smithery.ai/server/@VadimNastoyashchy/json-mcp)
 
-The **Model Context Protocol (MCP)** server empowers **LLMs** to efficiently interact with JSON files. With JSON MCP, you can **split**, **merge**, and **find specific data** within JSON files based on defined conditions.
+The **Model Context Protocol (MCP)** server empowers **LLMs** to efficiently interact with JSON files. With JSON MCP, you can **split**, **merge**, and **find specific data**, **validate** within JSON files based on defined conditions.
 
 ---
 
@@ -74,7 +74,7 @@ To configure the JSON MCP server manually in VS Code, update the **User Settings
 
 #### Installation in VS Code
 
-You can install the Playwright MCP server using the VS Code CLI:
+You can install the JSON MCP server using the VS Code CLI:
 
 ```bash
 # For VS Code
