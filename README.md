@@ -1,56 +1,66 @@
-## JSON MCP
-[![smithery badge](https://smithery.ai/badge/@VadimNastoyashchy/json-mcp)](https://smithery.ai/server/@VadimNastoyashchy/json-mcp)
+# JSON MCP
 
-A Model Context Protocol (MCP) server enables LLMs to interact with JSON file/s (split, merge, find specific data within conditions)
+[![Smithery Badge](https://smithery.ai/badge/@VadimNastoyashchy/json-mcp)](https://smithery.ai/server/@VadimNastoyashchy/json-mcp)
+
+The **Model Context Protocol (MCP)** server empowers **LLMs** to efficiently interact with JSON files. With JSON MCP, you can **split**, **merge**, and **find specific data** within JSON files based on defined conditions.
+
+---
 
 <a href="https://glama.ai/mcp/servers/@VadimNastoyashchy/json-mcp">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@VadimNastoyashchy/json-mcp/badge" />
 </a>
 
-### Key Features
+---
 
-- **Fast and lightweight**
-- **LLM-friendly**
+## 🌟 Key Features
 
+✅ **Fast and lightweight**  
+✅ **LLM-friendly functionality**  
 
-### Demo
+---
 
-![til](./assets/split-demo.gif)
+## 🎥 Demo
 
-### Use Cases (available tools)
+Below is a demo showcasing the `split` functionality:  
 
-#### `split`
+![Demo: Split JSON](./assets/split-demo.gif)
 
-Split a JSON file into a specified number of objects
+---
 
-> _! path to the file should be provided_
+## 🔧 Use Cases (Tools)
 
-_prompt example:_
+### 1. **`split`**  
+Split a JSON file into a specified number of objects.
 
+> **Note:** The file path must be provided.
+
+**Prompt Example:**  
+
+```plaintext
+Split JSON file from /Users/json-mcp/tests/merged.json  
+5 objects per file  
 ```
-Split json file from /Users/json-mcp/tests/merged.json
-5 objects per file
-```
 
-#### `merge`
-
+### 2. **`merge`**  
 Merge JSON files into a one JSON file
 
-> _! path to the folder should be provided_
+> **Note:** The folder path should be provided
 
-_prompt example:_
+**Prompt Example:**  
 
-```
+```plaintext
 Merge json files from /Users/json-mcp/tests
 ```
+---
 
+### ⚙️ Configuration
 
-### Configuration
+#### VS Code Manual Configuration
 
-`VS Code manual configuration`
+To configure the JSON MCP server manually in VS Code, update the **User Settings (JSON)** file:
 
-```js
-// User Settings (JSON)
+```json
+{
   "mcp": {
     "servers": {
       "json-mcp-server": {
@@ -58,9 +68,11 @@ Merge json files from /Users/json-mcp/tests
         "args": ["json-mcp-server@latest"]
       }
     }
-  },
+  }
+}
 ```
-`Installation in VS Code`
+
+#### Installation in VS Code
 
 You can install the Playwright MCP server using the VS Code CLI:
 
@@ -71,15 +83,17 @@ code --add-mcp '{"name":"json-mcp-server","command":"npx","args": ["json-mcp-ser
 
 After installation, the JSON MCP server will be available for use with your GitHub Copilot agent in VS Code.
 
-`Claude Desktop`
+#### Claude Desktop
 
 To install json-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@VadimNastoyashchy/json-mcp):
-
-### Installation Server
 
 ```bash
 npx -y @smithery/cli install @VadimNastoyashchy/json-mcp --client claude
 ```
+
+---
+
+### ⚙️ Installation Server
 
 #### Install globally
 
