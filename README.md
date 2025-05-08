@@ -55,7 +55,7 @@ Merge json files from /Users/json-mcp/tests
 
 ### ⚙️ Configuration
 
-[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](vscode:mcp/install?%7B%22name%22%3A%22%40VadimNastoyashchy%2Fjson-mcp%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40smithery%2Fcli%40latest%22%2C%22run%22%2C%22%40VadimNastoyashchy%2Fjson-mcp%22%2C%22--key%22%2C%2292357446-baf5-439c-b7c1-b5263e221b57%22%5D%7D)
+[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode:mcp/install?%7B%22name%22%3A%22%40VadimNastoyashchy%2Fjson-mcp%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40smithery%2Fcli%40latest%22%2C%22run%22%2C%22%40VadimNastoyashchy%2Fjson-mcp%22%2C%22--key%22%2C%2292357446-baf5-439c-b7c1-b5263e221b57%22%5D%7D)
 
 #### VS Code Manual Configuration
 
