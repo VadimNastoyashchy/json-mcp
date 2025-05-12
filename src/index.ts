@@ -86,7 +86,7 @@ const getParentDir = async (requestedPath: string): Promise<string> => {
   }
 }
 
-const getAllFileNames = async (
+export const getAllFileNames = async (
   dir: string,
   extension: string
 ): Promise<string[]> => {

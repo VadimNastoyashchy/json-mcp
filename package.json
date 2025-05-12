@@ -16,8 +16,7 @@
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js",
-    "prettier": "prettier . --check",
-    "fix-formatting": "npx prettier --write ."
+    "test:unit": "npx scripterio --folder=\"__tests__\""
   },
   "keywords": [
     "JSON",
@@ -40,7 +39,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
-    "typescript": "^5.3.3",
-    "prettier": "3.0.3"
+    "prettier": "3.0.3",
+    "scripterio": "^1.0.1",
+    "typescript": "^5.3.3"
   }
 }

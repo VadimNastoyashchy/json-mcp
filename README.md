@@ -15,13 +15,13 @@ The **Model Context Protocol (MCP)** server empowers **LLMs** to efficiently int
 ## 🌟 Key Features
 
 ✅ **Fast and lightweight**  
-✅ **LLM-friendly functionality**  
+✅ **LLM-friendly functionality**
 
 ---
 
 ## 🎥 Demo
 
-Below is a demo showcasing the `split` functionality:  
+Below is a demo showcasing the `split` functionality:
 
 ![Demo: Split JSON](./assets/split-demo.gif)
 
@@ -29,28 +29,31 @@ Below is a demo showcasing the `split` functionality:
 
 ## 🔧 Use Cases (Tools)
 
-### 1. **`split`**  
+### 1. **`split`**
+
 Split a JSON file into a specified number of objects.
 
 > **Note:** The file path must be provided.
 
-**Prompt Example:**  
+**Prompt Example:**
 
 ```plaintext
-Split JSON file from /Users/json-mcp/tests/merged.json  
-5 objects per file  
+Split JSON file from /Users/json-mcp/tests/merged.json
+5 objects per file
 ```
 
-### 2. **`merge`**  
+### 2. **`merge`**
+
 Merge JSON files into a one JSON file
 
 > **Note:** The folder path should be provided
 
-**Prompt Example:**  
+**Prompt Example:**
 
 ```plaintext
 Merge json files from /Users/json-mcp/tests
 ```
+
 ---
 
 ### ⚙️ Configuration
