@@ -1,9 +1,10 @@
-name: Revert on Failure
+name: Unit tests
 
 on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   check-and-revert:
@@ -27,9 +28,3 @@ jobs:
 
       - name: Unit test
         run: npm run test:unit
-
-      - name: Revert changes if actions fail
-        if: ${{ failure() }}
-        run: |
-          git reset --hard HEAD~1
-          git push --force
